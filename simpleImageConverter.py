@@ -37,10 +37,71 @@ top_parser.add_argument('-i', '--input', action="store", dest="input_file", requ
 top_parser.add_argument('-o', '--output', action="store", dest="output_file", required=False, help="Output to file. Default: same as input with different format.")
 top_parser.add_argument('-x', '--width', action='store', dest="new_width", help="Width in pixels if resize is desired.")
 top_parser.add_argument('-y', '--heigh', action='store', dest="new_heigh", help="Height in pixels if resize is desired.")
-top_parser.add_argument('-f', '--format', action='store', dest="out_format", help="File output format. Output file name format will be used if given.")
+top_parser.add_argument('-e', '--extension', action='store', dest="out_format", help="File output format. Output file name format will be used if given.")
+top_parser.add_argument('-f', '--fliph', action='store_true', dest="fliph", help="Flip image horizontally.")
+top_parser.add_argument('-v', '--flipv', action='store_true', dest="flipv", help="Flip image vertically.")
+top_parser.add_argument('-p', '--transpose', action='store_true', dest="transpose", help="Transpose image.")
+top_parser.add_argument('-t', '--transverse', action='store_true', dest="transverse", help="Transverse image.")
+top_parser.add_argument('--r90', action='store_true', dest="rotate90", help="Rotate image 90 degrees.")
+top_parser.add_argument('--r180', action='store_true', dest="rotate180", help="Rotate image 180 degrees.")
+top_parser.add_argument('--r270', action='store_true', dest="rotate270", help="Rotate image 270 degrees.")
 top_parser.add_argument('--version', action='version', version='%(prog)s 0.1b')
 
 supported_formats = ["bmp","dds","dib","eps","gif","ico","jpeg","jpg","pcx","png","tiff","webp"]
+
+
+def all_flag_funcs(image):
+    image = fliph_f(image)
+    image = flipv_f(image)
+    image = transverse_f(image)
+    image = transpose_f(image)
+    image = rotate90_f(image)
+    image = rotate180_f(image)
+    image = rotate270_f(image)
+    return image
+
+def fliph_f(image):
+    if fliph:
+        return image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+    else:
+        return image
+
+def flipv_f(image):
+    if flipv:
+        return image.transpose(Image.Transpose.FLIP_TOP_BOTTOM)
+    else:
+        return image
+
+def transpose_f(image):
+    if transpose:
+        return image.transpose(Image.Transpose.TRANSPOSE)
+    else:
+        return image
+
+def transverse_f(image):
+    if transverse:
+        return image.transpose(Image.Transpose.TRANSVERSE)
+    else:
+        return image
+
+def rotate90_f(image):
+    if rotate90:
+        return image.transpose(Image.Transpose.ROTATE_90)
+    else:
+        return image
+
+def rotate180_f(image):
+    if rotate180:
+        return image.transpose(Image.Transpose.ROTATE_180)
+    else:
+        return image
+
+def rotate270_f(image):
+    if rotate270:
+        return image.transpose(Image.Transpose.ROTATE_270)
+    else:
+        return image
+
 
 args = top_parser.parse_args()
 input_file = args.input_file
@@ -60,8 +121,7 @@ if args.new_heigh:
     new_heigh = int(args.new_heigh)
 else:
     new_heigh = args.new_heigh
-print(str(input_file).split(".")[-1].lower())
-print(str(output_file).split(".")[-1].lower())
+
 if all([input_file,output_file]):
     if any([str(input_file).split(".")[-1].lower() not in supported_formats,str(output_file).split(".")[-1].lower() not in supported_formats]):
         print("Unsupported file format. Suported formats arse:")
@@ -69,20 +129,29 @@ if all([input_file,output_file]):
             print(f"- {file_format}")
         exit()
 
+fliph = args.fliph
+flipv = args.flipv
+transpose = args.transpose
+transverse = args.transverse
+rotate90 = args.rotate90
+rotate180 = args.rotate180
+rotate270 = args.rotate270
+
+
+
 if all([input_file,out_format]):
     if any([str(input_file).split(".")[-1].lower() not in supported_formats,out_format.lower() not in supported_formats]):
         print("Unsupported file format. Suported formats are:")
         for file_format in supported_formats:
             print(f"- {file_format}")
         exit()
-
-
 if all([not output_file,not out_format,not new_width,not new_heigh]):
     print("You must point at least one output spec.")
 
 if not all([new_width,new_heigh]):
     "File wont be resized"
     out_image = Image.open(input_file)
+    out_image = all_flag_funcs(out_image)
     if output_file:
         out_image.save(output_file)
     if out_format:
@@ -93,6 +162,7 @@ if not all([new_width,new_heigh]):
 if any([new_heigh,new_width]):
     if all([new_heigh,new_width]):
         out_image = Image.open(input_file).resize([new_width,new_heigh])
+        out_image = all_flag_funcs(out_image)
         if output_file:
             out_image.save(output_file)
         elif out_format:
@@ -105,6 +175,7 @@ if any([new_heigh,new_width]):
         x, y = Image.open(input_file).size
         x = round((new_heigh/y)*x)
         out_image = Image.open(input_file).resize([x,new_heigh])
+        out_image = all_flag_funcs(out_image)
         if output_file:
             out_image.save(output_file)
         elif out_format:
@@ -117,6 +188,7 @@ if any([new_heigh,new_width]):
         x, y = Image.open(input_file).size
         y = round((new_width/x)*y)
         out_image = Image.open(input_file).resize([new_width,y])
+        out_image = all_flag_funcs(out_image)
         if output_file:
             out_image.save(output_file)
         elif out_format:
@@ -125,16 +197,6 @@ if any([new_heigh,new_width]):
         else:
             out_image.save(input_file)
 
+
+
 print("Done.")
-
-
-
-
-"""
-    TO DO
-    -----
-
-    Image transposition
-    FLIP_LEFT_RIGHT, FLIP_TOP_BOTTOM, ROTATE_90, ROTATE_180, ROTATE_270 and TRANSPOSE, which is an algebra transpose, with an image reflected across its main diagonal.
-
-"""
