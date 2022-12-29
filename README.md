@@ -33,8 +33,7 @@ Examples:
 bmp, dds, dib, eps, gif, ico, jpeg, jpg, pcx, png, tiff, webp
 
 ### To Do
-* Add: FLIP_LEFT_RIGHT, FLIP_TOP_BOTTOM, ROTATE_90, ROTATE_180, ROTATE_270 and TRANSPOSE, which is an algebra transpose, with an image reflected across its main diagonal.
-* Review code (I'm sleepy right now :-P)
+* Make code nicer
 
 ### License
 [DWTFYWWI](https://github.com/avar/DWTFYWWI)
