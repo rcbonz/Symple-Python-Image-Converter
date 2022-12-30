@@ -5,7 +5,7 @@ from pathlib import Path
 
 description = """********************************************************
 *                                                      *
-*             simpleImageConverter 0.1b                *
+*             simpleImageConverter 0.2b                *
 *                                                      *
 *                 Coded by: B0nz                       *
 *                                                      *
@@ -16,11 +16,20 @@ usage = """Usage:
     python3 simpleImageConverter.py -i <inputfile> -f <format> -x <outwidth> -y <outheight>
 
 Options:
-        -i, --input <file>      File to convert
-        -o, --output <file>     File output (if blank, same as input. Input will be overwriten.)
-        -x, --width <pixels>    Width in pixels if resize is desired
-        -y, --heigh <pixels>    Heigh in pixels if resize is desired
-        -f, --format <format>   File output format. Output file name format will be used if given.
+        -i, --input <file>          File to convert
+        -o, --output <file>         File output (if blank, same as input. Input will be overwriten.)
+        -x, --width <pixels>        Width in pixels if resize is desired
+        -y, --heigh <pixels>        Heigh in pixels if resize is desired
+        -e, --extension <format>    File extension output. Output file name extension will be used if given.
+        -f, --fliph                 Flip image horizontally.
+        -v, --flipv                 Flip image vertically.
+        -p, --transpose             Transpose image.
+        -t, --transverse            Transverse image.
+        --r90                       Rotate image 90 degrees.
+        --r180                      Rotate image 180 degrees.
+        --r270                      Rotate image 270 degrees.
+        -h                          This menu.
+        --version                   Version.
 
 Examples:
     python3 simpleImageConverter.py -i image.jpg -o image_out.gif -x 100 -y 100
@@ -45,7 +54,7 @@ top_parser.add_argument('-t', '--transverse', action='store_true', dest="transve
 top_parser.add_argument('--r90', action='store_true', dest="rotate90", help="Rotate image 90 degrees.")
 top_parser.add_argument('--r180', action='store_true', dest="rotate180", help="Rotate image 180 degrees.")
 top_parser.add_argument('--r270', action='store_true', dest="rotate270", help="Rotate image 270 degrees.")
-top_parser.add_argument('--version', action='version', version='%(prog)s 0.1b')
+top_parser.add_argument('--version', action='version', version='%(prog)s 0.2b')
 
 supported_formats = ["bmp","dds","dib","eps","gif","ico","jpeg","jpg","pcx","png","tiff","webp"]
 
